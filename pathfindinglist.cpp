@@ -82,7 +82,8 @@ void pathFindingList::show(){
     int i=0;
     while(i!=rows){
         while(aux!=nullptr){
-            std::cout<<aux->closed<<" ";
+
+            std::cout<<aux->closed<<" "<<aux->id<<" ";
             aux=aux->right;
         }
         std::cout<<std::endl;
@@ -231,7 +232,9 @@ void pathFindingList:: findRoute(int beggining, int final){
         openList.findMin();
         auxiliar=openList.min;
         auxiliar->closed=true;
+
         openList.deleteNode(auxiliar);
+
 
     }
     pathFindingNode *auxP=end;
@@ -263,4 +266,24 @@ pathFindingNode* pathFindingList:: findNode(int id){
         i++;
     }
     return aux;
+}
+void pathFindingList::makeItTrue(){
+    pathFindingNode *aux=head;
+    pathFindingNode *aux1=head;
+    QTextStream cout(stdout);
+    int i=0;
+    while(i!=rows){
+        while(aux!=nullptr){
+            aux->closed=false;
+            aux->opened=false;
+            aux->f=0;
+            aux->g=0;
+            aux->h=0;
+            aux->parent=nullptr;
+            aux=aux->right;
+        }
+        aux=aux1->down;
+        aux1=aux1->down;
+        i++;
+    }
 }

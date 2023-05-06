@@ -31,6 +31,7 @@ public:
     int adapPosY(int id);
     void auxMoveEnemies();
     void moveEnemies();
+    void defineRoute();
     int *vecMove;
     int randNumber();
 protected:

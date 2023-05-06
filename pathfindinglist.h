@@ -20,6 +20,7 @@ public:
     pathFindingNode* start;
     pathFindingNode* end;
     int routeWeight=0;
+    void makeItTrue();
 
 
 };

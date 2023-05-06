@@ -1,14 +1,19 @@
 #include "widget.h"
 #include <QDebug>
 #include <QRandomGenerator>
+#include <listid.h>
 
 int posXL1 [54]={-120,-100,-80 ,-60 , -40,-20 ,0   ,-60 ,-60,-60,-60,-120,-100,-80 ,-60 , -40,-20 ,0,40,40,40,40,40,40,60,80,100,120,120,120,120,120,120,-40,-40,-40,-40,-40,-20,0,-20,0,40,40,40,40,40,60,80,60,80,60,80};
 int posYL1 [54]={-120,-120,-120,-120,-120,-120,-120,-100,-80,-60,-40,-20 ,-20 ,-20 ,-20 ,-20 ,-20 ,-20,-120,-100,-80,-60,-40,-20,-100,-80,-100,-120,-100,-80,-60,-40,-20,20,40,60,80,100, 20,20,100,100,20,40,60,80,100,20,20,60,60,100,100};
 
 int posxE1=0;
 int posYE1=0;
+int blocks=54;
 QVariant counter=0;
 bool came=true;
+bool controler=true;
+listID IDList;
+
 
 
 widget::widget(QWidget *parent)
@@ -55,93 +60,139 @@ void widget::bL1_Clicked(){
         aux->item->setBrush(redBrush);
         aux->item->setPen(pen);
         aux->item->setPos(posXL1[i], posYL1[i]);
-        listMatL1.findNode((220+posXL1[i])/20+(140+posYL1[i])/20*22)->closed=true;
+        listMatL1.findNode (((220+posXL1[i])/20+(140+posYL1[i])/20*22)+1)->closed=true;
         aux=aux->next;
         i++;
     }
-    listMatL1.show();
+
     scene->addItem(enemy1);
     auxMoveEnemies();
 }
-int widget::adapPosX(int id){
-    return -220+id%22*20;
+
+void widget:: defineRoute(){
+    pathFindingList list;
+    list.buildMatrix(14,22);
+
+    int i=0;
+
+    while(i!=54){
+        list.findNode (((220+posXL1[i])/20+(140+posYL1[i])/20*22)+1)->closed=true;
+        i++;
+    }
+    int conversionPos=((220+enemy1->pos().x())/20+(140+enemy1->pos().y())/20*22)+1;
+    int x=randNumber();
+    list.findRoute(conversionPos, x);
+    qDebug()<<x;
+
+    pathFindingNode *auxEnd= list.end;
+
+    while (auxEnd!=nullptr) {
+        IDList.insert(auxEnd->id);
+        auxEnd=auxEnd->parent;
+    }
+    came=false;
+
+    //IDList.show();
+
 }
-int widget::adapPosY(int id){
-    return -140+(id-1)/22*20;
-}
+
 void widget::auxMoveEnemies(){
+    int x; int y;
     QTimer *timer = new QTimer();
+
     QObject::connect(timer, &QTimer::timeout, [&]() {
-        if(came==true){
-            listMatL1.findRoute((220+enemy1->pos().x())/20+(140+enemy1->pos().y())/20*22 , randNumber());
-            pathFindingNode *auxP=listMatL1.end;
+        listID auxList=IDList;
+        if(came){
+            if(controler){
+                pathFindingList list;
+                list.buildMatrix(14,22);
+                list.makeItTrue();
 
-            int *vec=new int [listMatL1.routeWeight];
+                int i=0;
 
-            int i = listMatL1.routeWeight-1;
+                while(i!=54){
+                    list.findNode (((220+posXL1[i])/20+(140+posYL1[i])/20*22)+1)->closed=true;
+                    i++;
+                }
+                int conversionPos=((220+enemy1->pos().x())/20+(140+enemy1->pos().y())/20*22)+1;
+                int x=randNumber();
+                list.findRoute(conversionPos, x);
+                qDebug()<<x;
 
-            while(auxP->parent!=nullptr){
-                vec[i]=auxP->id;
-                auxP=auxP->parent;
-                i--;
+                pathFindingNode *auxEnd= list.end;
+
+                while (auxEnd!=nullptr) {
+                    IDList.insert(auxEnd->id);
+                    auxEnd=auxEnd->parent;
+                }
+                came=false;
+                controler=false;
             }
-            counter=listMatL1.routeWeight;
-            vecMove=vec;
-            came=false;
-            pathFindingList newList;
-            newList.buildMatrix(15,22);
-            listMatL1=newList;
-            int j=0;
-            blockNode *aux=list.head;
-            while(aux!=nullptr){
-
-                listMatL1.findNode((220+posXL1[j])/20+(140+posYL1[j])/20*22)->closed=true;
-                aux=aux->next;
-                j++;
-            }
-
-            listMatL1.show();
-
 
         }
+        else{
+            qDebug()<< auxList.head->id;
+            x=adapPosX( auxList.head->id);
+            y=adapPosY(auxList.head->id);
+            enemy1->setPos(x, y);
+            IDList.deleteFirst();
+            if(IDList.head==nullptr){
+                came=true;
+                controler=true;
 
 
+            }
+        }
 
     } );
     timer->start(200);
-    moveEnemies();
+    //moveEnemies();
 }
+
+
+
+
 void widget::moveEnemies(){
     QTimer *timer = new QTimer();
     QObject::connect(timer, &QTimer::timeout, [&]() {
-        if(came==false && counter!=0){
-            enemy1->setPos(adapPosX(*vecMove), adapPosY(*(vecMove)));
-            vecMove++;
-            qDebug()<<"1";
-            counter=counter.toInt()-1;
-            if(counter==0)
-                came=true;
+        defineRoute();
 
-        }
     } );
     timer->start(300);
 }
+
+
+
+
+
 int widget::randNumber(){
     int i=0; bool again=false;
     while(true){
         again=false;
-        int rand=QRandomGenerator::global()->bounded(1, 331);
+        int rand=QRandomGenerator::global()->bounded(1, 301);
         while(i!=53){
-            if((220+posXL1[i])/20+(140+posYL1[i])/20*22==rand){
+            if((220+posXL1[i])/20+(140+posYL1[i])/20*22+1==rand){
                 again=true;
                 break;
             } i++;
         }
 
-
-          if(!again)
-              return rand;
+        if(!again)
+            return rand;
     }
 
 }
+
+
+
+
+
+int widget::adapPosX(int id){
+    return -220+id%22*20-20;
+}
+int widget::adapPosY(int id){
+    return -140+(id-1)/22*20;
+}
+
+
 

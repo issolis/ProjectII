@@ -27,35 +27,40 @@ void linkedList::deleteNode(pathFindingNode *Node){
 
     node *aux = head;
     node *aux1=head;
-    if(head->id==Node) {
-        if(head->next!=nullptr){
-            head=head->next;
-        }
-        else
-            head=nullptr;
-    }
-    aux=head;
-    while(aux!=nullptr){
-
-        if(aux->id==Node){
-            if(aux->next!=nullptr)
-                aux1->next=aux->next;
+    if(head!=nullptr){
+        if(head->id==Node) {
+            if(head->next!=nullptr){
+                head=head->next;
+            }
             else
-                aux1->next=nullptr;
-            break;
+                head=nullptr;
         }
-        aux1=aux;
-        aux=aux->next;
+        aux=head;
+        while(aux!=nullptr){
+
+            if(aux->id==Node){
+                if(aux->next!=nullptr)
+                    aux1->next=aux->next;
+                else
+                    aux1->next=nullptr;
+                break;
+            }
+            aux1=aux;
+            aux=aux->next;
+        }
     }
 }
 void linkedList:: findMin(){
-    pathFindingNode *min=head->id;
-    node *aux=head;
+    if(head!=nullptr){
+        pathFindingNode *min=head->id;
+        node *aux=head;
 
-    while(aux!=nullptr){
-        if(min->f>aux->id->f)
-            min=aux->id;
-        aux=aux->next;
+        while(aux!=nullptr){
+            if(min->f>aux->id->f)
+                min=aux->id;
+            aux=aux->next;
+        }
+        this->min=min;
+
     }
-    this->min=min;
 }

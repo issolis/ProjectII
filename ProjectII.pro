@@ -13,8 +13,10 @@ SOURCES += \
     blocknode.cpp \
     graphicview.cpp \
     linkedlist.cpp \
+    listid.cpp \
     main.cpp \
     node.cpp \
+    nodeid.cpp \
     pathfindinglist.cpp \
     pathfindingnode.cpp \
     widget.cpp
@@ -24,7 +26,9 @@ HEADERS += \
     blocknode.h \
     graphicview.h \
     linkedlist.h \
+    listid.h \
     node.h \
+    nodeid.h \
     pathfindinglist.h \
     pathfindingnode.h \
     widget.h
