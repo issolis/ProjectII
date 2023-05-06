@@ -1,10 +1,14 @@
 #include "graphicview.h"
 #include <QKeyEvent>
 #include <QDebug>
+#include <windowgame.h>
 
+bool GameStarted=false;
 GraphicsView::GraphicsView(QWidget* parent) : QGraphicsView(parent)
 {
     setFocusPolicy(Qt::StrongFocus);
+    centerOn(mapToScene(viewport()->rect().center()));
+
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent* event)
@@ -18,3 +22,7 @@ void GraphicsView::keyPressEvent(QKeyEvent* event)
         QGraphicsView::keyPressEvent(event);
     }
 }
+void GraphicsView:: setScene(QGraphicsScene *scene) {
+    QGraphicsView::setScene(scene);
+}
+

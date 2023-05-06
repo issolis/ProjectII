@@ -16,6 +16,11 @@ public:
     void findRoute(int beggining, int final );
     int * findBeggining(int beggining);
     void defineH(int xF, int yF);
+    pathFindingNode* findNode(int id);
+    pathFindingNode* start;
+    pathFindingNode* end;
+    int routeWeight=0;
+
 
 };
 

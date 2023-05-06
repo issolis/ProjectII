@@ -82,7 +82,7 @@ void pathFindingList::show(){
     int i=0;
     while(i!=rows){
         while(aux!=nullptr){
-            std::cout<<"Position: ("<<aux->idRow<<","<<aux->idColum<<"): "<<aux->id<<" ";
+            std::cout<<aux->closed<<" ";
             aux=aux->right;
         }
         std::cout<<std::endl;
@@ -111,12 +111,12 @@ void pathFindingList:: defineH(int xF, int yF){
 void pathFindingList:: findRoute(int beggining, int final){
     int xB=-1, yB;
     int xF=-1, yF;
+    routeWeight=0;
 
     pathFindingNode *aux=head;
     pathFindingNode *aux1=head;
 
-    pathFindingNode *start;
-    pathFindingNode *end;
+
 
     int i=0;
     while(i!=rows){
@@ -239,6 +239,7 @@ void pathFindingList:: findRoute(int beggining, int final){
     while(auxP->parent!=nullptr){
         route=QString::number(auxP->id )+"-"+ route;
         auxP=auxP->parent;
+        routeWeight++;
     }
     route=QString::number(beggining)+"-"+route;
     qDebug()<<route;
@@ -246,3 +247,20 @@ void pathFindingList:: findRoute(int beggining, int final){
 
 }
 
+pathFindingNode* pathFindingList:: findNode(int id){
+    pathFindingNode *aux=head;
+    pathFindingNode *aux1=head;
+    QTextStream cout(stdout);
+    int i=0;
+    while(i!=rows){
+        while(aux!=nullptr){
+            if(aux->id==id)
+                return aux;
+            aux=aux->right;
+        }
+        aux=aux1->down;
+        aux1=aux1->down;
+        i++;
+    }
+    return aux;
+}
