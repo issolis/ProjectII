@@ -9,6 +9,7 @@ public:
     blockNode *head=nullptr;
     void insert(int nodesAmount);
     void show();
+    blockNode *findNode(int id);
 
 
 };

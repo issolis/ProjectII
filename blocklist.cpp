@@ -10,6 +10,7 @@ void blockList::insert(int nodesAmount){
     while(i!=0){
         blockNode *newNode=  new blockNode();
         newNode->item=new QGraphicsRectItem(0,0,20,20);
+        newNode->item1=new QGraphicsPixmapItem(QPixmap (":poi.png"));
         newNode->id=nodesAmount-i;
         if(i==nodesAmount){
             head=newNode;
@@ -32,3 +33,12 @@ void blockList::show(){
    }
 }
 
+blockNode* blockList::findNode(int id){
+    blockNode *aux=head;
+    while(aux!=nullptr){
+        if(aux->id==id)
+            return aux;
+        aux=aux->next;
+    }
+    return aux;
+}

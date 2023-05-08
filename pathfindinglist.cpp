@@ -7,7 +7,7 @@
 #include <string>
 pathFindingList::pathFindingList()
 {
-
+    head=nullptr;
 }
 pathFindingList pathFindingList::buildMatrix(int rows, int colums){
     pathFindingNode *newNode=  new pathFindingNode();
@@ -229,23 +229,31 @@ void pathFindingList:: findRoute(int beggining, int final){
                 openList.insert(auxiliar->up);
             auxiliar->up->opened=true;
         }
-        openList.findMin();
+
+        if(openList.head!=nullptr)
+            openList.findMin();
+        else{
+            break;
+        }
         auxiliar=openList.min;
         auxiliar->closed=true;
-
         openList.deleteNode(auxiliar);
 
 
+
     }
-    pathFindingNode *auxP=end;
-    QString route="";
-    while(auxP->parent!=nullptr){
-        route=QString::number(auxP->id )+"-"+ route;
-        auxP=auxP->parent;
-        routeWeight++;
+    if(openList.head!=nullptr){
+        pathFindingNode *auxP=end;
+        QString route="";
+        if(auxP!=nullptr){
+            while(auxP->parent!=nullptr){
+                route=QString::number(auxP->id )+"-"+ route;
+                auxP=auxP->parent;
+                routeWeight++;
+            }
+            route=QString::number(beggining)+"-"+route;
+            qDebug()<<route;}
     }
-    route=QString::number(beggining)+"-"+route;
-    qDebug()<<route;
 
 
 }
@@ -286,4 +294,24 @@ void pathFindingList::makeItTrue(){
         aux1=aux1->down;
         i++;
     }
+}
+
+void pathFindingList:: freeEveryThing(){
+    pathFindingNode *aux=head;
+    pathFindingNode *aux1=head;
+    QTextStream cout(stdout);
+    int i=0;
+    while(i!=rows){
+        pathFindingNode *next;
+        while(aux!=nullptr){
+            next=aux->right;
+            delete aux;
+            aux=next;
+        }
+
+        aux=aux1->down;
+        aux1=aux1->down;
+        i++;
+    }
+    head=nullptr;
 }

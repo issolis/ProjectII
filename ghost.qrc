@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>g.png</file>
         <file>g1.png</file>
+        <file>pac.png</file>
+        <file>po.png</file>
+        <file>poi.png</file>
+        <file>bg.png</file>
     </qresource>
 </RCC>

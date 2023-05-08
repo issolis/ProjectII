@@ -51,7 +51,7 @@ void linkedList::deleteNode(pathFindingNode *Node){
     }
 }
 void linkedList:: findMin(){
-    if(head!=nullptr){
+
         pathFindingNode *min=head->id;
         node *aux=head;
 
@@ -62,5 +62,5 @@ void linkedList:: findMin(){
         }
         this->min=min;
 
-    }
+
 }

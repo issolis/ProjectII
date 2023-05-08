@@ -18,9 +18,11 @@ public:
     void defineH(int xF, int yF);
     pathFindingNode* findNode(int id);
     pathFindingNode* start;
-    pathFindingNode* end;
+    pathFindingNode* end=nullptr;
+
     int routeWeight=0;
     void makeItTrue();
+    void freeEveryThing();
 
 
 };
