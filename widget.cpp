@@ -2,13 +2,14 @@
 #include <QDebug>
 #include <QRandomGenerator>
 #include <listid.h>
+#include <QTcpSocket>
 
 int posXL1 [54]={-120,-100,-80 ,-60 , -40,-20 ,0   ,-60 ,-60,-60,-60,-120,-100,-80 ,-60 , -40,-20 ,0,40,40,40,40,40,40,60,80,100,120,120,120,120,120,120,-40,-40,-40,-40,-40,-20,0,-20,0,40,40,40,40,40,60,80,60,80,60,80};
 int posYL1 [54]={-120,-120,-120,-120,-120,-120,-120,-100,-80,-60,-40,-20 ,-20 ,-20 ,-20 ,-20 ,-20 ,-20,-120,-100,-80,-60,-40,-20,-100,-80,-100,-120,-100,-80,-60,-40,-20,20,40,60,80,100, 20,20,100,100,20,40,60,80,100,20,20,60,60,100,100};
 
 int posxE1=0;
 int posYE1=0;
-int blocks=54;
+int blocks=53;
 
 
 QVariant counter=0;
@@ -47,9 +48,7 @@ widget::widget(QWidget *parent)
         bL1_Clicked();
     });
 
-
 }
-
 void widget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_W) {
@@ -67,7 +66,7 @@ void widget::keyPressEvent(QKeyEvent *event)
 }
 
 void widget::bL1_Clicked(){
-    b_LevelI->hide();
+     b_LevelI->hide();
     b_LevelI->setEnabled(false);
 
 
@@ -96,6 +95,7 @@ void widget::bL1_Clicked(){
     MoveSecondEnemy();
     movePlayer();
     checkPoints();
+    //server();
 
 }
 
@@ -161,39 +161,23 @@ void widget::MoveFirstEnemy(){
     QTimer *timer = new QTimer();
 
     QObject::connect(timer, &QTimer::timeout, [&]() {
-
-        try {
-
-
-            if(came){
-                defineRouteFirstEnemy();
-            }
-            else{
-                if(IDList.head!=nullptr){
-                    x=adapPosX(IDList.head->id);
-                    y=adapPosY(IDList.head->id);
-
-                    IDList.deleteFirst();
-                    if(IDList.head==nullptr){
-                        came=true;
-                        controler=true;
-                    }
-
-                        enemy1->setPos(x, y);
-
-                }else{
-                    came=true;
-
-                }
-            }
-        }  catch (const std::exception& e) {
-            qDebug()<<&e;
-            timer->stop();
+        if(came){
+            defineRouteFirstEnemy();
         }
+        else{
 
+            x=adapPosX(IDList.head->id);
+            y=adapPosY(IDList.head->id);
 
+            IDList.deleteFirst();
+            if(IDList.head==nullptr){
+                came=true;
+                controler=true;
+            }
 
-    } );
+            enemy1->setPos(x, y);
+        }
+    });
     timer->start(30);
 
 }
@@ -203,31 +187,21 @@ void widget::MoveSecondEnemy(){
     QTimer *timer = new QTimer();
 
     QObject::connect(timer, &QTimer::timeout, [&]() {
-        try {
-            if(came1){
-                defineRouteSecondEnemy();
-            }
-            else{
-                if(IDList1.head!=nullptr){
-                    x=adapPosX(IDList1.head->id);
-                    y=adapPosY(IDList1.head->id);
+        if(came1){
+            defineRouteSecondEnemy();
+        }
+        else{
+            x=adapPosX(IDList1.head->id);
+            y=adapPosY(IDList1.head->id);
 
-                    IDList1.deleteFirst();
-                    if(IDList1.head==nullptr){
-                        came1=true;
-                    }
-                        enemy2->setPos(x, y);
-
-                }else{
-                    came1=true;
-                }
+            IDList1.deleteFirst();
+            if(IDList1.head==nullptr){
+                came1=true;
             }
-        }  catch (const std::exception& e) {
-            qDebug()<<&e;
-            timer->stop();
+            enemy2->setPos(x, y);
         }
     } );
-    timer->start(30);
+    timer->start(40);
 }
 
 int widget::randNumber(){
@@ -249,9 +223,8 @@ int widget::randNumber(){
 }
 
 int widget::adapPosX(int id){
-        int posX=-220+(id-1)%22*20;
-        return posX;
-
+    int posX=-220+(id-1)%22*20;
+    return posX;
 }
 
 int widget::adapPosY(int id){
@@ -261,29 +234,36 @@ int widget::adapPosY(int id){
 void widget::movePlayer(){
     QTimer *timer = new QTimer();
     QObject::connect(timer, &QTimer::timeout, [&]() {
-
+        int conversionPos;
         if(direcction==1){
-            pacman->setPos(pacman->pos().x()+20, pacman->pos().y());
+            conversionPos=((240+pacman->pos().x())/20+(140+pacman->pos().y())/20*22)+1;
+            if (!noPutIt(1, conversionPos))
+                pacman->setPos(pacman->pos().x()+20, pacman->pos().y());
             if(pacman->pos().x()>200){
                 pacman->setPos(-220, pacman->pos().y());
             }
         }
         if(direcction==2){
-            pacman->setPos(pacman->pos().x()-20, pacman->pos().y());
-
+            conversionPos=((200+pacman->pos().x())/20+(140+pacman->pos().y())/20*22)+1;
+            if (!noPutIt(1, conversionPos))
+                pacman->setPos(pacman->pos().x()-20, pacman->pos().y());
             if(pacman->pos().x()<-220){
                 pacman->setPos(200, pacman->pos().y());
             }
         }
-        if(direcction==3){
-            pacman->setPos(pacman->pos().x(), pacman->pos().y()-20);
+        if(direcction==3){\
+            conversionPos=((220+pacman->pos().x())/20+(120+pacman->pos().y())/20*22)+1;
+            if (!noPutIt(1, conversionPos))
+                pacman->setPos(pacman->pos().x(), pacman->pos().y()-20);
             if(pacman->pos().y()<-140){
                 pacman->setPos( pacman->pos().x(),120);
             }
 
         }
         if(direcction==4){
-            pacman->setPos(pacman->pos().x(), pacman->pos().y()+20);
+            conversionPos=((220+pacman->pos().x())/20+(160+pacman->pos().y())/20*22)+1;
+            if (!noPutIt(1, conversionPos))
+                pacman->setPos(pacman->pos().x(), pacman->pos().y()+20);
             if(pacman->pos().y()>120){
                 pacman->setPos(pacman->pos().x(),-140);
             }
@@ -304,7 +284,7 @@ void widget:: colocatePoints(){
         if(!flag){
 
             points.findNode(j)->item1->setPos(adapPosX(i),adapPosY(i));
-             points.findNode(j)->item1->setZValue(-100);
+            points.findNode(j)->item1->setZValue(-100);
             scene->addItem( points.findNode(j)->item1);
             j++;
         }
@@ -318,8 +298,11 @@ bool widget:: noPutIt(int level, int ID){
     int i=0;
     if(level==1){
         while(i!=blocks){
-            if (adapPosX(ID)==posXL1[i] && adapPosY(ID)==posYL1[i])
-                return true;
+            if (adapPosX(ID)==posXL1[i] && adapPosY(ID)==posYL1[i]){
+                qDebug()<<i;
+                qDebug()<<posXL1[i];
+                qDebug()<<posYL1[i];
+                return true;}
             i++;
         }
 
@@ -344,4 +327,12 @@ void widget:: checkPoints(){
     }
     );
     timer->start(150);
+}
+
+void widget:: server(){
+    QTimer *timer = new QTimer();
+    QObject::connect(timer, &QTimer::timeout, [&]() {
+
+    });
+    timer->start(100);
 }

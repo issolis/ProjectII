@@ -14,6 +14,7 @@ SOURCES += \
     graphicview.cpp \
     linkedlist.cpp \
     listid.cpp \
+    localserver.cpp \
     main.cpp \
     node.cpp \
     nodeid.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     graphicview.h \
     linkedlist.h \
     listid.h \
+    localserver.h \
     node.h \
     nodeid.h \
     pathfindinglist.h \

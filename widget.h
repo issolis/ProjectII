@@ -12,6 +12,7 @@
 #include <QGraphicsPixmapItem>
 #include <QTimer>
 #include <listid.h>
+#include <QTcpServer>
 
 class widget : public QWidget
 {
@@ -44,6 +45,9 @@ public:
     blockList points;
     listID poinstGotten;
     void checkPoints();
+    void server();
+    QTcpServer Server;
+
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
