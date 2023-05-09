@@ -9,27 +9,33 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    backtraking.cpp \
     blocklist.cpp \
     blocknode.cpp \
     graphicview.cpp \
     linkedlist.cpp \
+    listback.cpp \
     listid.cpp \
     localserver.cpp \
     main.cpp \
     node.cpp \
+    nodeback.cpp \
     nodeid.cpp \
     pathfindinglist.cpp \
     pathfindingnode.cpp \
     widget.cpp
 
 HEADERS += \
+    backtraking.h \
     blocklist.h \
     blocknode.h \
     graphicview.h \
     linkedlist.h \
+    listback.h \
     listid.h \
     localserver.h \
     node.h \
+    nodeback.h \
     nodeid.h \
     pathfindinglist.h \
     pathfindingnode.h \
