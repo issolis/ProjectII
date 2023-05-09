@@ -2,10 +2,13 @@
 #define NODEBACK_H
 
 
-class nodeback
+class nodeBack
 {
 public:
-    nodeback();
+    nodeBack(int x, int y);
+    int x;
+    int y;
+    nodeBack* next;
 };
 
 #endif // NODEBACK_H
