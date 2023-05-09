@@ -60,3 +60,10 @@ int listBack::length(){
     }
     return len;
 }
+void listBack::addToGlobalList(listBack path){
+    nodeBack* curr = path.head;
+    while (curr != nullptr) {
+        add(curr->x, curr->y);
+        curr = curr->next;
+    }
+}

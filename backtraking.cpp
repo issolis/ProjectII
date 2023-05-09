@@ -3,6 +3,8 @@
 #include <cstring>
 
 using namespace std;
+listBack ultimapath;
+
 
 
 backTraking::backTraking(int arr[N][N]) {
@@ -27,7 +29,7 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
 
-    if (canMoveRight ) {
+    if (canMoveRight && grid[x+1][y] != -1) {
 
         if (grid[x+1][y] > 0 ){
 
@@ -57,7 +59,7 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
     }
-    if (canMoveLeft  ) {
+    if (canMoveLeft  && grid[x-1][y] != -1) {
 
 
         if (grid[x-1][y] > 0){
@@ -86,7 +88,7 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
     }
-    if (canMoveDown  ) {
+    if (canMoveDown && grid[x][y+1] != -1) {
 
         if(grid[x][y+1] > 0){
             int newValue = grid[x][y+1];
@@ -112,9 +114,9 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
     }
-    if (canMoveUp ) {
+    if (canMoveUp && grid[x][y-1] != -1) {
 
-        if (grid[x][y-1] > 0){
+        if (grid[x][y-1] > 0 ){
 
             int newValue = grid[x][y-1];
             grid[x][y-1] = -1;
@@ -140,14 +142,13 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
     }
-    if (x == end_x && y == end_y ){
+    if (x == end_x && y == end_y ){    ;
 
-        if (shortestPath.esvacia() || distance < shortestPathLength){
-            shortestPath = path;
+
+        if ( distance < shortestPathLength){
+
             shortestPathLength = distance;
-            path.printPath(shortestPath);
-
-
+            shortestPath.addToGlobalList(path);
 
 
         }
@@ -159,13 +160,20 @@ void backTraking::backtrack(int x, int y, int distance, int end_x, int end_y, li
 
 
 
+
+
+
+
 }
 listBack backTraking::findShortestPath(int start_x, int start_y, int end_x, int end_y) {
     listBack path;
     path.add(start_x, start_y);
     backtrack(start_x, start_y, 0, end_x, end_y, path);
 
-
+    path.printPath(shortestPath);
     return shortestPath;
+
+
+
 
 }

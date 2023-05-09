@@ -13,6 +13,9 @@ public:
     bool esvacia();
     void printPath(listBack path);
     int length();
+    void addToGlobalList(listBack path);
+
+
 
 };
 
