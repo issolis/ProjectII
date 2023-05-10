@@ -9,10 +9,9 @@
 #include <localserver.h>
 #include <QThread>
 #include <QRandomGenerator>
+LocalServer *server;
 class serverManager{
-public:
-
-    LocalServer *server;
+public:    
     serverManager(){
         server=new LocalServer();
         server->listen(QHostAddress::Any, 1234);
@@ -27,6 +26,7 @@ public:
             QThread::msleep(0.001);
         }
 
+
     }
 };
 int main(int argc, char *argv[])
@@ -34,8 +34,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     serverManager *manager= new serverManager();
-    //manager->waitConnection();
+   // manager->waitConnection();
     widget w;
+    //w.Server=server;
     w.show();
 
     return a.exec();

@@ -12,7 +12,7 @@
 #include <QGraphicsPixmapItem>
 #include <QTimer>
 #include <listid.h>
-#include <QTcpServer>
+#include <localserver.h>
 
 class widget : public QWidget
 {
@@ -46,12 +46,12 @@ public:
     listID poinstGotten;
     void checkPoints();
     void server();
-    QTcpServer Server;
+    LocalServer *Server;
+    int determinateDirecction(QString comas);
 
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
-
 
 
 };

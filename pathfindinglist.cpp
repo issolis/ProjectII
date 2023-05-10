@@ -252,7 +252,8 @@ void pathFindingList:: findRoute(int beggining, int final){
                 routeWeight++;
             }
             route=QString::number(beggining)+"-"+route;
-            qDebug()<<route;}
+            //qDebug()<<route;
+        }
     }
 
 

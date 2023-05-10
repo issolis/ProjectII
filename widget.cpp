@@ -66,7 +66,7 @@ void widget::keyPressEvent(QKeyEvent *event)
 }
 
 void widget::bL1_Clicked(){
-     b_LevelI->hide();
+    b_LevelI->hide();
     b_LevelI->setEnabled(false);
 
 
@@ -165,20 +165,25 @@ void widget::MoveFirstEnemy(){
             defineRouteFirstEnemy();
         }
         else{
+            if(IDList.head!=nullptr){
 
-            x=adapPosX(IDList.head->id);
-            y=adapPosY(IDList.head->id);
+                x=adapPosX(IDList.head->id);
+                y=adapPosY(IDList.head->id);
 
-            IDList.deleteFirst();
-            if(IDList.head==nullptr){
-                came=true;
-                controler=true;
+                IDList.deleteFirst();
+                if(IDList.head==nullptr){
+                    came=true;
+                    controler=true;
+                }
+
+                enemy1->setPos(x, y);
             }
-
-            enemy1->setPos(x, y);
+            else{
+                came=true;
+            }
         }
     });
-    timer->start(30);
+    timer->start(10);
 
 }
 
@@ -191,17 +196,22 @@ void widget::MoveSecondEnemy(){
             defineRouteSecondEnemy();
         }
         else{
-            x=adapPosX(IDList1.head->id);
-            y=adapPosY(IDList1.head->id);
+            if(IDList.head!=nullptr){
+                x=adapPosX(IDList1.head->id);
+                y=adapPosY(IDList1.head->id);
 
-            IDList1.deleteFirst();
-            if(IDList1.head==nullptr){
+                IDList1.deleteFirst();
+                if(IDList1.head==nullptr){
+                    came1=true;
+                }
+                enemy2->setPos(x, y);
+            }
+            else{
                 came1=true;
             }
-            enemy2->setPos(x, y);
         }
     } );
-    timer->start(40);
+    timer->start(10);
 }
 
 int widget::randNumber(){
@@ -279,8 +289,8 @@ void widget:: colocatePoints(){
 
     while(i!=330){
         bool flag=noPutIt(1,i);
-        if(flag)
-            qDebug()<<flag;
+
+
         if(!flag){
 
             points.findNode(j)->item1->setPos(adapPosX(i),adapPosY(i));
@@ -299,9 +309,7 @@ bool widget:: noPutIt(int level, int ID){
     if(level==1){
         while(i!=blocks){
             if (adapPosX(ID)==posXL1[i] && adapPosY(ID)==posYL1[i]){
-                qDebug()<<i;
-                qDebug()<<posXL1[i];
-                qDebug()<<posYL1[i];
+
                 return true;}
             i++;
         }
@@ -332,7 +340,52 @@ void widget:: checkPoints(){
 void widget:: server(){
     QTimer *timer = new QTimer();
     QObject::connect(timer, &QTimer::timeout, [&]() {
+        QString s=Server->socket->readAll();
+        qDebug()<<s;
+
+        //if(!s.isEmpty())
+          //  determinateDirecction(s);
 
     });
-    timer->start(100);
+    timer->start(250);
+}
+
+int widget::determinateDirecction(QString comas){
+    int dirY=1;
+    int dirX=1;
+    int dirZ=1;
+
+    int p=0;
+    if(comas.at(0)=="-"){
+        dirX=-1;
+    }
+    int i=0;
+    while(i!=comas.length()){
+        if(comas.at(i)=="," ){
+            if(comas.at(i+1)=="-"&& p==0){
+                dirY=-1;
+                p++;
+            }
+            if(comas.at(i+1)=="-"&& p==1){
+                dirZ=-1;
+                p++;
+            }
+
+        }
+        i++;
+
+    }
+    if(p==2){
+        if((dirX>0 && dirY>0 && dirZ>0) || (dirX>0 && dirY<0 && dirZ>0))
+            direcction=1;
+        if((dirX<0 && dirY>0 && dirZ>0) || (dirX<0 && dirY<0 && dirZ>0))
+            direcction=2;
+        if((dirX<0 && dirY>0 && dirZ<0) || (dirX<0 && dirY<0 && dirZ<0))
+            direcction=3;
+        if((dirX>0 && dirY>0 && dirZ<0) || (dirX<0 && dirY>0 && dirZ<0))
+            direcction=4;
+    }
+    qDebug()<<direcction;
+
+
 }
