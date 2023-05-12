@@ -110,7 +110,8 @@ void widget:: defineRouteFirstEnemy(){
         i++;
     }
     int conversionPos=((220+enemy1->pos().x())/20+(140+enemy1->pos().y())/20*22)+1;
-    int x=randNumber();
+
+    int x=((220+pacman->pos().x())/20+(140+pacman->pos().y())/20*22)+1;
     list->findRoute(conversionPos, x);
 
     pathFindingNode *auxEnd;
@@ -183,7 +184,7 @@ void widget::MoveFirstEnemy(){
             }
         }
     });
-    timer->start(10);
+    timer->start(225);
 
 }
 
@@ -211,7 +212,7 @@ void widget::MoveSecondEnemy(){
             }
         }
     } );
-    timer->start(10);
+    timer->start(200);
 }
 
 int widget::randNumber(){
